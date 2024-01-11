@@ -37,10 +37,17 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # Third-party
+    "crispy_forms",
+    "crispy_bootstrap5",
+    # Local
     "accounts.apps.AccountsConfig",
     "pages.apps.PagesConfig"
 ]
 
+# django-crispy-forms
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"    # New
+CRISPY_TEMPLATE_PACK = "bootstrap5"     # New
 AUTH_USER_MODEL = "accounts.CustomUser" #New
 
 MIDDLEWARE = [
@@ -124,6 +131,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATICFILES_DIRS = [BASE_DIR / "static"] # added
+STATIC_ROOT = BASE_DIR / "staticfiles" # added
+STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage" # added
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
