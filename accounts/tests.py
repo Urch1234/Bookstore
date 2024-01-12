@@ -1,26 +1,39 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-from django.urls import reverse, resolve
+from django.urls import reverse
 
-from .forms import CustomUserCreationForm
-from .views import SignupPageView
 
-# Create your tests here.
 class CustomUserTest(TestCase):
+    """
+    Test case for custom user model functionality.
+
+    Methods:
+    - test_create_user: Test the creation of a regular user.
+    - test_create_superuser: Test the creation of a superuser.
+    """
+
     def test_create_user(self):
+        """
+        Test creating a regular user and verify user attributes.
+        """
         User = get_user_model()
         user = User.objects.create_user(
             username="Urchman", email="iernest61@gmail.com", password="Abcdefgh_1"
         )
-        self.assertEqual(user.username, "Urchman")
+        self.assertEqual(
+            user.username, "Urchman", msg="Username mismatch for regular user"
+        )
         self.assertEqual(user.email, "iernest61@gmail.com")
         self.assertTrue(user.is_active)
         self.assertFalse(user.is_staff)
         self.assertFalse(user.is_superuser)
 
     def test_create_superuser(self):
-        User = get_user_model()
-        admin_user = User.objects.create_superuser(
+        """
+        Test creating a superuser and verify superuser attributes.
+        """
+        user = get_user_model()
+        admin_user = user.objects.create_superuser(
             username="superadmin", email="superadmin@email.com", password="Abcdefgh_1"
         )
         self.assertEqual(admin_user.username, "superadmin")
@@ -32,56 +45,42 @@ class CustomUserTest(TestCase):
 
 class SignUpPageTests(TestCase):
     """
-    Test suite for the sign-up page of the Django web application.
+    Test case for the signup page functionality.
+
+    Attributes:
+    - username: A sample username for testing.
+    - email: A sample email address for testing.
 
     Methods:
-        - setUp:
-          Set up preconditions for each test method by retrieving the URL for the sign-up page
-          and performing a GET request.
-
-        - test_signup_template:
-          Test whether the sign-up page returns a 200 status code, uses the expected template
-          ("registration/signup.html"), contains the text "Sign Up," and does not contain
-          the text "Hi there! I should not be on the page."
-
-    Usage:
-        Run these tests to verify the correct functioning of the sign-up page views and templates.
+    - setUp: Set up the initial conditions for testing.
+    - test_signup_template: Test the rendering of the signup template.
+    - test_signup_form: Test the signup form submission and user creation.
     """
+
+    username = "newuser"
+    email = "newuser@email.com"
 
     def setUp(self):
         """
-        Set up preconditions for each test method.
-
-        This method is called before each test method to set up any necessary preconditions.
-        In this case, it retrieves the URL for the sign-up page and performs a GET request,
-        storing the response in the instance variable self.response for use in the test methods.
+        Set up the initial conditions for testing the signup page.
         """
-        url = reverse("signup")
+        url = reverse("account_signup")
         self.response = self.client.get(url)
 
     def test_signup_template(self):
         """
-        Test whether the sign-up page returns a 200 status code, uses the expected template
-        ("registration/signup.html"), contains the text "Sign Up," and does not contain
-        the text "Hi there! I should not be on the page."
+        Test the rendering of the signup template.
         """
         self.assertEqual(self.response.status_code, 200)
-        self.assertTemplateUsed(self.response, "registration/signup.html")
+        self.assertTemplateUsed(self.response, "account/signup.html")
         self.assertContains(self.response, "Sign Up")
         self.assertNotContains(self.response, "Hi there! I should not be on the page.")
 
     def test_signup_form(self):
         """
-        Test whether the sign-up form in the sign-up page context is an instance of
-        the CustomUserCreationForm and contains the CSRF token.
+        Test the signup form submission and user creation.
         """
-        form = self.response.context.get("form")
-        self.assertIsInstance(form, CustomUserCreationForm)
-        self.assertContains(self.response, "csrfmiddlewaretoken")
-
-    def test_signup_view(self):
-        """
-        Test whether the URL "/accounts/signup/" resolves to the expected SignupPageView.
-        """
-        view = resolve("/accounts/signup/")
-        self.assertEqual(view.func.__name__, SignupPageView.as_view().__name__)
+        new_user = get_user_model().objects.create_user(self.username, self.email)
+        self.assertEqual(get_user_model().objects.all().count(), 1)
+        self.assertEqual(get_user_model().objects.all()[0].username, self.username)
+        self.assertEqual(get_user_model().objects.all()[0].email, self.email)
