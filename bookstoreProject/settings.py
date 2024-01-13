@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from environs import Env
+
+env = Env()
+env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-^$0y*rvurw63)-6&&+8je4(strv0h867pa_lf-27)0g11)siko"
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DEBUG")  # Adjusted
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [".herokuapp.com", "localhost", "127.0.0.1"]  # Added
 
 
 # Application definition
@@ -48,26 +52,6 @@ INSTALLED_APPS = [
     "pages.apps.PagesConfig",
 ]
 
-# django-allauth config
-LOGIN_REDIRECT_URL = "home"
-ACCOUNT_LOGOUT_REDIRECT = "home"
-SITE_ID = 1  # added
-ACCOUNT_USERNAME_REQUIRED = False   # ADDED
-ACCOUUNT_AUTHENTICATION_METHOD = "email"    # ADDED
-ACCOUNT_EMAIL_REQUIRED = True   # ADDED
-ACCOUNT_UNIQUE_EMAIL = True     # ADDED
-AUTHENTICATION_BACKENDS = (
-    "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
-)  # added
-ACCOUNT_SESSION_REMEMBER = True # ADDED
-ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False # ADDED
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"  # added temporarily
-
-# django-crispy-forms
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"  # added
-CRISPY_TEMPLATE_PACK = "bootstrap5"  # added
-AUTH_USER_MODEL = "accounts.CustomUser"  # added
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -77,7 +61,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "allauth.account.middleware.AccountMiddleware", # added
+    "allauth.account.middleware.AccountMiddleware",  # added
 ]
 
 ROOT_URLCONF = "bookstoreProject.urls"
@@ -105,14 +89,10 @@ WSGI_APPLICATION = "bookstoreProject.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "postgres",
-        "USER": "postgres",
-        "PASSWORD": "password1234",
-        "HOST": "localhost",
-        "PORT": "5432",
-    }
+    "default": env.dj_db_url(
+        "DATABASE_URL",
+        default="postgres://postgres@db/postgres"
+    )
 }
 
 
@@ -159,3 +139,24 @@ STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"  #
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# django-crispy-forms
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"  # added
+CRISPY_TEMPLATE_PACK = "bootstrap5"  # added
+AUTH_USER_MODEL = "accounts.CustomUser"  # added
+
+# django-allauth config
+LOGIN_REDIRECT_URL = "home"
+ACCOUNT_LOGOUT_REDIRECT = "home"
+SITE_ID = 1  # added
+ACCOUNT_USERNAME_REQUIRED = False  # ADDED
+ACCOUUNT_AUTHENTICATION_METHOD = "email"  # ADDED
+ACCOUNT_EMAIL_REQUIRED = True  # ADDED
+ACCOUNT_UNIQUE_EMAIL = True  # ADDED
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+)  # added
+ACCOUNT_SESSION_REMEMBER = True  # ADDED
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False  # ADDED
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"  # added temporarily

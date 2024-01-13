@@ -9,8 +9,11 @@ psycopg2-binary = "==2.9.3"
 django-crispy-forms = "*"
 crispy-bootstrap5 = "*"
 django-allauth = "*"
+django-environs = "*"
+environs = {extras = ["django"], version = "*"}
 
 [dev-packages]
+pylint = "*"
 
 [requires]
 python_version = "3.12"

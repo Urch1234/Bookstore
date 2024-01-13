@@ -22,3 +22,6 @@ __init__.py
 
 # .vscode
 .vscode/
+
+# env
+.env
