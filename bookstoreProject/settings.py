@@ -89,10 +89,7 @@ WSGI_APPLICATION = "bookstoreProject.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": env.dj_db_url(
-        "DATABASE_URL",
-        default="postgres://postgres@db/postgres"
-    )
+    "default": env.dj_db_url("DATABASE_URL", default="postgres://postgres@db/postgres")
 }
 
 
@@ -159,4 +156,5 @@ AUTHENTICATION_BACKENDS = (
 )  # added
 ACCOUNT_SESSION_REMEMBER = True  # ADDED
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False  # ADDED
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"  # added temporarily
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"  # added temporarily
+DEFAULT_FROM_EMAIL = "admin@djangobookstore.com"
