@@ -18,9 +18,11 @@
                     aria-controls="navbarCollapse" arial-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
-        
                     <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                        <li>
+                        <li class="nav-item">
+                            <a href="{% url 'book_list' %}" class="nav-link">Books</a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{% url 'about' %}" class="nav-link">About</a>
                         </li>
         
