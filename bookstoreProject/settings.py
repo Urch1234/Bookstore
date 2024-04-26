@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     "allauth",
     "allauth.account",
+    "debug_toolbar",
     # Local
     "accounts.apps.AccountsConfig",
     "pages.apps.PagesConfig",
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE = [
+    "django.middleware.cache.UpdateCacheMiddleware",    # New
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -63,6 +65,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",  # added
+    "debug_toolbar.middleware.DebugToolbarMiddleware",  # added for debugging
+    "django.middleware.cache.FetchFromCacheMiddleware", # New
 ]
 
 ROOT_URLCONF = "bookstoreProject.urls"
@@ -150,7 +154,7 @@ LOGIN_REDIRECT_URL = "home"
 ACCOUNT_LOGOUT_REDIRECT = "home"
 SITE_ID = 1  # added
 ACCOUNT_USERNAME_REQUIRED = False  # ADDED
-ACCOUUNT_AUTHENTICATION_METHOD = "email"  # ADDED
+ACCOUNT_AUTHENTICATION_METHOD = "email"  # ADDED
 ACCOUNT_EMAIL_REQUIRED = True  # ADDED
 ACCOUNT_UNIQUE_EMAIL = True  # ADDED
 AUTHENTICATION_BACKENDS = (
@@ -161,3 +165,10 @@ ACCOUNT_SESSION_REMEMBER = True  # ADDED
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False  # ADDED
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"  # added temporarily
 DEFAULT_FROM_EMAIL = "admin@djangobookstore.com"
+
+# django-debug-toolbar
+INTERNAL_IPS = ['127.0.0.1']
+
+CACHE_MIDDLEWARE_ALIAS = "default"
+CACHE_MIDDLEWARE_SECONDS = 604800
+CACHE_MIDDLEWARE_KEY_PREFIX = ""

@@ -19,6 +19,9 @@ from django.conf.urls.static import static # added to view user-uploaded content
 from django.contrib import admin
 from django.urls import path, include
 
+if settings.DEBUG:
+    import debug_toolbar
+
 urlpatterns = [
     # Django admin
     path("admin/", admin.site.urls),
@@ -30,3 +33,7 @@ urlpatterns = [
 ] + static(
     settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
 )   # added to view local content
+
+urlpatterns = [
+    path("__debug__/", include(debug_toolbar.urls))
+] + urlpatterns
